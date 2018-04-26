@@ -2,15 +2,97 @@ package SimpleCode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Stack;
-import java.util.concurrent.LinkedBlockingDeque;
+
 
 public class first {
     public static void main(String[] args)
     {
+         int[] nums = {1,2,6,3,4,5,6};
+         ListNode headNode = createListNode(nums,0);
+         removeElements(headNode,6);
+        }
 
+    /**
+     * 题目：删除链表中的节点
+     *
+     * 请编写一个函数，使其可以删除某个链表中给定的（非末尾的）节点，您将只被给予要求被删除的节点。
+
+     比如：假设该链表为 1 -> 2 -> 3 -> 4  ，给定您的为该链表中值为 3 的第三个节点，那么在调用了您的函数之后，该链表则应变成 1 -> 2 -> 4 。
+      */
+    //node为给定的值
+    public void deleteNode(ListNode node) {
+         node.val = node.next.val;
+         node.next = node.next.next;
     }
+
+
+    /**
+     * 题目：删除链表中的元素
+     *
+     * 删除链表中等于给定值 val 的所有元素。
+
+     示例
+     给定: 1 --> 2 --> 6 --> 3 --> 4 --> 5 --> 6, val = 6
+     返回: 1 --> 2 --> 3 --> 4 --> 5
+     */
+
+    public static ListNode removeElements(ListNode head, int val) {
+         if(head == null)
+             return null;
+         while (head.val == val)
+         {
+             head = head.next;
+             if (head == null)
+                 return null;
+         }
+
+         ListNode tmpNode = head;
+         while (tmpNode.next != null)
+         {
+             if (tmpNode.next.val == val)
+                 tmpNode.next = tmpNode.next.next;
+             else
+                 tmpNode = tmpNode.next;
+         }
+         return head;
+    }
+
+
+    /**
+     * 题目：给定一个数组 nums 和一个值 val，你需要原地移除所有数值等于 val 的元素，返回移除后数组的新长度。
+
+     不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
+
+     元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
+
+     示例 1:
+
+     给定 nums = [3,2,2,3], val = 3,
+
+     函数应该返回新的长度 2, 并且 nums 中的前两个元素均为 2。
+
+     你不需要考虑数组中超出新长度后面的元素。
+     */
+    public int removeElement(int[] nums, int val) {
+       if (nums.length == 0)
+           return 0;
+       if (nums.length == 1)
+           return nums[0] == val ? 0 : 1;
+       int count = 0 ;
+       for (int  i = 0 ; i < nums.length ; i++)
+       {
+          if (nums[i] != val)
+          {
+              nums[count] = nums[i];
+              count++;
+          }
+       }
+       return count;
+    }
+
+
+
 
 
     /**
@@ -29,7 +111,24 @@ public class first {
      你不需要考虑数组中超出新长度后面的元素。
 
      */
-
+    public int removeDuplicates(int[] nums) {
+       if (nums.length == 1)
+           return 1;
+       int count = 0;
+       for (int i = 0 ; i < nums.length;i++)
+       {
+           int j = i + 1;
+           count ++;
+           while ( j < nums.length && nums[i] == nums[j])
+           {
+               j++;
+           }
+           if (j < nums.length)
+               nums[count] = nums[j];
+           i = j - 1;
+       }
+       return count;
+    }
 
 
     /**
