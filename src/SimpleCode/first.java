@@ -4,10 +4,218 @@ import java.util.*;
 
 
 public class first {
-    public static void main(String[] args)
-    {
-        System.out.println(mySqrt(8));
+    public static void main(String[] args) {
+        int[] index = {8, 9, 9, 9};
+
+
     }
+    /**
+     * 题目：两数相加
+     * 给定两个非空链表来表示两个非负整数。位数按照逆序方式存储，它们的每个节点只存储单个数字。将两数相加返回一个新的链表。
+
+     你可以假设除了数字 0 之外，这两个数字都不会以零开头。
+     */
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int carry = 0 , sum = 0;
+        ListNode headNode = l1;
+       while (l1 != null && l2 != null)
+       {
+          sum = l1.val + l2.val + carry;
+          l1.val = sum % 10;
+          carry = sum / 10;
+          l1 = l1.next;
+          l2 = l2.next;
+       }
+        ListNode tmpNode = new ListNode(1);
+        tmpNode.next = null;
+       if (l1 != null)
+       {
+           while (l1 != null)
+           {
+               if (l1.val + carry != 10)
+               {
+                   l1.val = l1.val + carry;
+                   return headNode;
+               }
+               else
+               {
+                   l1.val = (l1.val + carry) % 10;
+                   carry = (l1.val + carry) / 10;
+               }
+           }
+           if (l1 == null)
+               l1 = tmpNode;
+       }
+
+       if (l2 != null)
+       {
+           l1 = l2;
+           while (l2 != null)
+           {
+               if (l2.val + carry != 10)
+               {
+                   l2.val = l2.val + carry;
+                   return headNode;
+               }
+               else
+               {
+                   l2.val = (l2.val + carry) % 10;
+                   carry = (l2.val + carry) / 10;
+               }
+           }
+           if (l2 == null)
+               l1 = tmpNode;
+       }
+
+       return headNode;
+    }
+    /**
+     * 题目：二进制求和
+     *
+     * 给定两个二进制字符串，返回他们的和（用二进制表示）。
+
+     输入为非空字符串且只包含数字 1 和 0。
+
+     示例 1:
+
+     输入: a = "11", b = "1"
+     输出: "100"
+     */
+    /**
+     * 题目：加一
+     * 给定一个非负整数组成的非空数组，在该数的基础上加一，返回一个新的数组。
+
+     最高位数字存放在数组的首位， 数组中每个元素只存储一个数字。
+
+     你可以假设除了整数 0 之外，这个整数不会以零开头。
+     */
+    public String addBinary(String a, String b) {
+       //创建临时数组，用于存储二进制和
+        int[] result = new int[a.length() >= b.length() ? a.length() : b.length()];
+        int index =  result.length - 1;
+        int endA = a.length() - 1;
+        int endB = b.length() - 1;
+        int carry = 0;
+        int sum = 0;
+        while (endA >= 0 && endB >= 0)
+        {
+           sum = (Integer.valueOf(a.charAt(endA)) - 48) + (Integer.valueOf(b.charAt(endB)) - 48) + carry;
+           result[index] = sum % 2;
+           carry = sum / 2;
+           endA--;
+           endB--;
+           index--;
+        }
+        while (endA >= 0)
+        {
+            if ((Integer.valueOf(a.charAt(endA))- 48) + carry == 2 )
+            {
+                result[index] = 0;
+                carry = 1;
+                endA--;
+                index--;
+            }
+            else
+            {
+                result[index] = (Integer.valueOf(a.charAt(endA)) - 48) + carry;
+                index--;
+                endA--;
+                carry = 0;
+            }
+        }
+        while (endB >= 0)
+        {
+            if ((Integer.valueOf(b.charAt(endB))- 48) + carry == 2 )
+            {
+                result[index] = 0;
+                carry = 1;
+                endB--;
+                index--;
+            }
+            else
+            {
+                result[index] = (Integer.valueOf(b.charAt(endB)) - 48) + carry;
+                index--;
+                endB--;
+                carry = 0;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        if (carry == 1)
+        {
+            int[] newindex = new int[result.length + 1];
+            newindex[0] = 1;
+            for (int i = 1 ; i < newindex.length;i++)
+                newindex[i] = result[i - 1];
+            for (int num : newindex)
+                sb.append(num);
+            return sb.toString();
+        }
+        for (int num : result)
+            sb.append(num);
+      return  sb.toString();
+    }
+    public static int[] plusOne(int[] digits) {
+        int i ;
+        for (i = digits.length - 1 ; i >= 0 ; i --)
+        {
+            if (digits[i] != 9)
+            {
+                digits[i]++;
+                break;
+            }
+            else
+                digits[i] = 0;
+        }
+        if ( i < 0 && digits[0] == 0)
+        {
+            int[] newIndex = new int[digits.length + 1];
+            newIndex[0] = 1;
+            return newIndex;
+        }
+        return digits;
+    }
+
+
+
+    /**
+     * 题目：最后一个单词的长度
+     * 给定一个仅包含大小写字母和空格 ' ' 的字符串，返回其最后一个单词的长度。
+
+     如果不存在最后一个单词，请返回 0 。
+
+     说明：一个单词是指由字母组成，但不包含任何空格的字符串。
+     */
+    public static int lengthOfLastWord(String s) {
+        if (s == null || s == " ")
+            return 0;
+        String[] stringList = s.trim().split(" ");
+
+        return stringList[stringList.length - 1].length();
+    }
+
+    /**
+     * 题目：最大子序和
+     * 给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+     */
+    public int maxSubArray(int[] nums) {
+      if(nums.length == 0)
+          return 0;
+      int sum = 0;
+      int result = Integer.MIN_VALUE;
+      for (int value:nums)
+      {
+          if (sum < 0)
+              sum = value;
+          else
+              sum +=  value;
+          result = Math.max(result,sum);
+      }
+      return result;
+
+    }
+
+
     /**
      * 题目：第一个错误的版本
      *
