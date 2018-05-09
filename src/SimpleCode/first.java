@@ -3,11 +3,210 @@ package SimpleCode;
 import java.util.*;
 
 
+
 public class first {
     public static void main(String[] args) {
-        int[] index = {8, 9, 9, 9};
+        System.out.println("aaaaa".indexOf("bba"));
+    }
+    /**
+     * 题目：给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。
+     */
+    public int strStr(String haystack, String needle) {
+        return haystack.indexOf(needle);
+    }
+    /**
+     * 题目：合并两个有序数组(从后往前推)
+     */
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+      int index = m + n - 1;
+      int endNums1 = m - 1,endNums2 = n -  1;
+      while (endNums1 >= 0 && endNums2 >= 0)
+      {
+          nums1[index--] = nums1[endNums1] > nums2[endNums2] ?nums1[endNums1--]:nums2[endNums2--];
+      }
+      while (endNums2 >= 0)
+      {
+          nums1[index--] = nums2[endNums2--];
+      }
+    }
+    /**
+     * 题目：给定一个非空字符串 s，最多删除一个字符。判断是否能成为回文字符串。
+     */
+    public static boolean validPalindrome(String s) {
+      if (s.trim().length() == 0)
+          return false;
+      boolean flag = true;
+      int i = 0,j = s.length() -1;
+      while (i <= j)
+      {
+          if (s.charAt(i) == s.charAt(j))
+          {
+              i++;
+              j--;
+          }
+          else
+          {
+              if (flag)  //说明还可以删除一个字符
+              {
+                  int start = i+1,end = j-1;
+                  if (s.charAt(start) == s.charAt(j) && s.charAt(start+1) == s.charAt(end))
+                  {
+                      i++;
+                      flag = false;
+                  }
+                  else if (s.charAt(i) == s.charAt(end)&& s.charAt(start) == s.charAt(end-1))
+                  {
+                      j--;
+                      flag = false;
+                  }
+                  else
+                      return false;
+              }
+              else
+                  return false;
+          }
+      }
+      return true;
+    }
+    /**
+     * 题目：给定一个字符串，验证它是否是回文串，只考虑字母和数字字符，可以忽略字母的大小写。
+     */
+    public static boolean isPalindrome(String s) {
+        if (s.length() == 0 || s.trim().length() == 0)
+               return true;
+        for (int i = 0 , j = s.length() - 1 ;i < j ;i++,j--)
+        {
+            while (!Character.isLetter(s.charAt(i)) && !Character.isDigit(s.charAt(i)))
+            {
+                i++;
+                if (i > s.length() - 1)
+                    return true;
+            }
+            while (!Character.isLetter(s.charAt(j)) && !Character.isDigit(s.charAt(j)))
+            {
+                j--;
+                if (j < 0)
+                    return true;
+            }
+            if (Character.toLowerCase(s.charAt(i)) != Character.toLowerCase(s.charAt(j)))
+                return false;
+        }
+        return true;
+    }
+//    public static boolean isPalindrome(String s) {
+//      if (s.length() == 0 || s.trim().length() == 0)
+//          return true;
+//      StringBuilder sb = new StringBuilder();
+//      for (int i = 0 ; i < s.length();i++)
+//      {
+//          if (Character.isDigit(s.charAt(i)) || Character.isLetter(s.charAt(i)))
+//              sb.append(s.charAt(i));
+//      }
+//      return sb.toString().equalsIgnoreCase(sb.reverse().toString());
+//    }
+     /**
+     * 题目：请判断一个链表是否为回文链表。
+     */
+    public static boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null)
+            return true;
+        ListNode middleNode = findMinddle(head); //找到链表中点节点
+        middleNode.next = ReverseList(middleNode.next);//链表节点反转
+        ListNode p = head,q = middleNode.next;
+        while ( p != null && q != null && p.val == q.val)
+        {
+            p = p.next;
+            q = q.next;
+        }
+        return q == null;
+    }
+    //找到链表中点
+    public static ListNode findMinddle(ListNode head){
+        if(head == null || head.next == null)
+            return head;
+        ListNode p = head,q = head;
+        while (p != null && q.next != null && q.next.next != null)
+        {
+            p = p.next;
+            q = q.next.next;
+        }
+        return p;
+    }
+    //原地反转链表
+    public static ListNode ReverseList(ListNode head){
+        ListNode tmpNode = null;
+        while (head != null)
+        {
+            ListNode nextNode = head.next;
+            head.next = tmpNode;
+            tmpNode = head;
+            head = nextNode;
+        }
+        return tmpNode;
+    }
+        /**
+         * 题目：删除排序链表中的重复元素 II
+         * 给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中 没有重复出现 的数字。
+         */
+    public ListNode deleteDuplicates(ListNode head) {
+       if (head == null || head.next == null)
+           return head;
+       ListNode tmpNode = head.next;
+       boolean flag = false;  //用于标志是否需要删除头部
+       while (tmpNode != null && tmpNode.val == head.val)
+       {
+              tmpNode =  tmpNode.next;
+              flag = true;
+       }
+       if (flag)
+           return deleteDuplicates(tmpNode);
+       head.next = deleteDuplicates(head.next);
+       return head;
+    }
+    /**
+     * 题目：删除排序链表中的重复元素
+     * 给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。
+     */
+//    public ListNode deleteDuplicates(ListNode head) {
+//         if (head == null || head.next == null)
+//             return head;
+//         ListNode targetNode = head;
+//         ListNode tmpNode = targetNode.next;
+//         while (tmpNode != null)
+//         {
+//             if (tmpNode.val == targetNode.val)
+//             {
+//                 targetNode.next = tmpNode.next;
+//                 tmpNode = tmpNode.next;
+//             }
+//             else
+//             {
+//                 targetNode = tmpNode;
+//                 tmpNode = targetNode.next;
+//             }
+//         }
+//         return head;
+//    }
+    /**
+     * 题目：爬楼梯
+     * 假设你正在爬楼梯。需要 n 步你才能到达楼顶。
 
+     每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
 
+     注意：给定 n 是一个正整数。
+     */
+    public int climbStairs(int n) {
+        if(n == 1 || n == 2)
+            return n;
+        int f1 = 1,f2 = 2;
+        int result = 0;
+        for (int i = 3 ; i <= n;i++)
+        {
+            result = f1 + f2;
+            f1 = f2;
+            f2 = result;
+        }
+        return result;
     }
     /**
      * 题目：两数相加
@@ -393,17 +592,17 @@ public class first {
 
      给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。
      */
-    public static int strStr(String haystack, String needle) {
-        if (needle.trim() == "" || haystack.trim() == "")
-            return 0;
-        char target = needle.charAt(0);
-        for (int i = 0 ; i < haystack.toCharArray().length;i++)
-        {
-            if (haystack.charAt(i) == target)
-                return i;
-        }
-        return -1;
-    }
+//    public static int strStr(String haystack, String needle) {
+//        if (needle.trim() == "" || haystack.trim() == "")
+//            return 0;
+//        char target = needle.charAt(0);
+//        for (int i = 0 ; i < haystack.toCharArray().length;i++)
+//        {
+//            if (haystack.charAt(i) == target)
+//                return i;
+//        }
+//        return -1;
+//    }
 
 
 
