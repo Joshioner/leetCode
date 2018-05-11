@@ -1,12 +1,258 @@
 package SimpleCode;
 
 import java.util.*;
-
+import java.util.concurrent.LinkedBlockingDeque;
 
 
 public class first {
     public static void main(String[] args) {
-        System.out.println("aaaaa".indexOf("bba"));
+        System.out.println(generate(0));
+    }
+    /**
+     * 题目：给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
+     */
+    public static List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> resultList = new ArrayList<>();
+        if (numRows == 0 )
+            return resultList;
+      if (numRows == 1)
+      {
+          List<Integer> tempList = new ArrayList<>();
+          tempList.add(1);
+          resultList.add(tempList);
+          return resultList;
+      }
+      if (numRows == 2)
+      {
+          List<Integer> tempList = new ArrayList<>();
+          tempList.add(1);
+          tempList.add(1);
+          resultList = generate(1);
+          resultList.add(tempList);
+          return resultList;
+      }
+      resultList = generate(2);
+      for (int i = 3;i <= numRows;i++)
+      {
+          List<Integer> tempList = new ArrayList<>();
+          tempList.add(1);
+          List<Integer> preList = generate(i - 1).get( i - 2);
+          for (int j = 0 ; j + 1 < preList.size();j ++)
+          {
+              tempList.add(preList.get(j) + preList.get(j + 1));
+          }
+          tempList.add(1);
+          resultList.add(tempList);
+      }
+      return resultList;
+    }
+    /**
+     * 题目：给定一个二叉树和一个目标和，判断该树中是否存在根节点到叶子节点的路径，这条路径上所有节点值相加等于目标和。
+
+     说明: 叶子节点是指没有子节点的节点。
+     */
+    boolean flag = false;
+    public boolean hasPathSum(TreeNode root, int sum) {
+      if (root == null)
+      {
+          if (sum == 0 && flag)
+              return true;
+          else
+          {
+              flag = true;
+              return false;
+          }
+      }
+      flag = true;
+      if (root.left == null)
+      {
+          return hasPathSum(root.right,sum - root.val);
+      }
+      if (root.right == null)
+          return hasPathSum(root.left,sum - root.val);
+      return hasPathSum(root.left,sum - root.val) || hasPathSum(root.right,sum - root.val);
+    }
+    /**
+     * 题目: 将有序数组转换为二叉搜索树
+     *
+     */
+    public TreeNode sortedArrayToBST(int[] nums) {
+       return sortedArrayToBST(nums,0,nums.length - 1);
+    }
+    public TreeNode sortedArrayToBST(int[] nums,int begin,int end)
+    {
+        if (begin > end)
+             return  null;
+        int mid = (begin + end) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = sortedArrayToBST(nums,begin,mid - 1);
+        root.right = sortedArrayToBST(nums,mid + 1,end);
+        return root;
+    }
+    /**
+     * 题目：给定一个二叉树，找出其最小深度。
+
+     最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+
+     说明: 叶子节点是指没有子节点的节点。
+     */
+    public static int minDepth(TreeNode root) {
+       if (root == null)
+            return 0;
+        if (root.left == null)
+            return minDepth( root.right) + 1;
+        if (root.right == null)
+            return minDepth(root.left) + 1;
+       return Math.min(minDepth(root.left),minDepth(root.right)) + 1 ;
+    }
+    /**
+     * 题目：平衡二叉树
+     * 给定一个二叉树，判断它是否是高度平衡的二叉树。
+     本题中，一棵高度平衡二叉树定义为：
+     一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过1。
+     */
+    public boolean isBalanced(TreeNode root) {
+         if (root == null)
+             return true;
+
+         return Math.abs(maxDepth(root.left)-maxDepth(root.right)) <= 1 && isBalanced(root.left) && isBalanced((root.right));
+    }
+
+    /**
+     * 题目：给定一个二叉树，返回其节点值自底向上的层次遍历。 （即按从叶子节点所在层到根节点所在的层，逐层从左向右遍历）
+     */
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+
+       List<List<Integer>> treeNodeValList = new ArrayList<>();
+        if (root == null)
+            return treeNodeValList;
+       Queue<TreeNode> queue = new LinkedBlockingDeque<>();
+       queue.add(root);
+       while (!queue.isEmpty())
+       {
+           int size = queue.size();
+           List<Integer> tmpList = new ArrayList<>();
+           for (int i = 0 ;i < size;i++)
+           {
+               TreeNode tmpNode =  queue.poll();
+               if (tmpNode.left != null)
+                   queue.add(tmpNode.left);
+               if (tmpNode.right != null)
+                   queue.add(tmpNode.right);
+               tmpList.add(tmpNode.val);
+           }
+           treeNodeValList.add(tmpList);
+       }
+      int start = 0,end = treeNodeValList.size() - 1;
+       while (start <= end)
+       {
+           List<Integer> tmpList = treeNodeValList.get(start);
+           treeNodeValList.set(start,treeNodeValList.get(end));
+           treeNodeValList.set(end,tmpList);
+           end--;
+           start++;
+       }
+       return treeNodeValList;
+    }
+    /**
+     * 题目：二叉树的最大深度
+     */
+//    public int maxDepth(TreeNode root) {
+//         if (root == null)
+//             return 0;
+//         int count = 1;
+//         Queue<TreeNode> queue = new LinkedBlockingDeque<>();
+//         queue.add(root);
+//         while (!queue.isEmpty())
+//         {
+//             int size = queue.size();
+//             for (int  i = 0;i < size;i++)
+//             {
+//                 TreeNode tmpNode = queue.poll();
+//                 if (tmpNode.left != null)
+//                     queue.add(tmpNode.left);
+//                 if (tmpNode.right != null)
+//                     queue.add(tmpNode.right);
+//             }
+//             count++;
+//         }
+//         return count-1;
+//    }
+    public int maxDepth(TreeNode root) {
+       if (root == null)
+           return 0;
+       return Math.max(maxDepth(root.left),maxDepth(root.right)) + 1;
+    }
+    /**
+     * 题目：给定一个二叉树，检查它是否是镜像对称的。
+
+     例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+         1
+       / \
+      2   2
+     / \ / \
+     3  4 4  3
+     */
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null)
+            return true;
+        return symmetric(root.left,root.right);
+    }
+    public boolean symmetric(TreeNode p,TreeNode q)
+    {
+        if (p == null && q == null)
+            return true;
+        if(p == null || q == null)
+            return false;
+        return p.val == q.val && symmetric(p.left,q.right) && symmetric(p.right,q.left);
+    }
+    /**
+     * 题目：给定两个二叉树，编写一个函数来检验它们是否相同。
+
+     如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的。
+     */
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null)
+            return true;
+        if (p == null || q == null)
+            return false;
+//       Queue<TreeNode> queueTreeA = new LinkedBlockingDeque<TreeNode>();
+//       Queue<TreeNode> queueTreeB = new LinkedBlockingDeque<TreeNode>();
+//       queueTreeA.add(p);
+//       queueTreeB.add(q);
+//       while (!queueTreeA.isEmpty() && !queueTreeB.isEmpty())
+//       {
+//           int sizeA = queueTreeA.size();
+//           int sizeB = queueTreeB.size();
+//           if (sizeA != sizeB)
+//               return false;
+//           for (int i = 0 ; i < sizeA;i++)
+//           {
+//              TreeNode rootA = queueTreeA.poll();
+//              TreeNode rootB = queueTreeB.poll();
+//              if (rootA != rootB)
+//                  return false;
+//              if (rootA.left != null)
+//              {
+//                  queueTreeA.add(rootA.left);
+//              }
+//               if (rootB.left != null)
+//               {
+//                   queueTreeB.add(rootB.left);
+//               }
+//              if (rootA.right!= null )
+//              {
+//                  queueTreeA.add(rootA.right);
+//              }
+//              if (rootB.right != null)
+//              {
+//                  queueTreeB.add(rootB.right);
+//              }
+//           }
+//       }
+//       if (!queueTreeA.isEmpty() || !queueTreeB.isEmpty())
+//           return false;
+       return (p.val == q.val && isSameTree(p.left,q.left) && isSameTree(p.right,q.right));
     }
     /**
      * 题目：给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。
