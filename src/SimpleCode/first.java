@@ -6,7 +6,60 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class first {
     public static void main(String[] args) {
-        System.out.println(generate(0));
+        int[] nums = {7,6,4,3,1};
+        System.out.println(maxProfit(nums));
+    }
+    /**
+     * 题目：
+     给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+
+     如果你最多只允许完成一笔交易（即买入和卖出一支股票），设计一个算法来计算你所能获取的最大利润。
+
+     注意你不能在买入股票前卖出股票。
+     */
+    public static int maxProfit(int[] prices) {
+        if (prices.length == 0 || prices.length == 1)
+            return 0;
+        int max = 0;
+        int min = Integer.MAX_VALUE;
+        for (int index = 0; index < prices.length;index++)
+        {
+            if (prices[index] < min)
+            {
+                min = prices[index];
+                continue;
+            }
+            if (prices[index] - min > max)
+            {
+                max = prices[index] - min;
+            }
+        }
+       return max;
+
+    }
+    /**
+     * 题目：给定一个非负索引 k，其中 k ≤ 33，返回杨辉三角的第 k 行。
+     */
+    public static List<Integer> getRow(int rowIndex) {
+        List<List<Integer>> resultList = new ArrayList<>();
+        if (rowIndex < 0  )
+            return new ArrayList<>();
+        List<Integer> firstList = new ArrayList<>();
+        firstList.add(1);
+        resultList.add(firstList);
+        for (int i = 1;i <= rowIndex;i++)
+        {
+            List<Integer> tempList = new ArrayList<>();
+            tempList.add(1);
+            List<Integer> preList = resultList.get(i - 1);
+            for (int j = 0 ; j + 1 < preList.size();j ++)
+            {
+                tempList.add(preList.get(j) + preList.get(j + 1));
+            }
+            tempList.add(1);
+            resultList.add(tempList);
+        }
+        return resultList.get(rowIndex);
     }
     /**
      * 题目：给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
@@ -15,28 +68,14 @@ public class first {
         List<List<Integer>> resultList = new ArrayList<>();
         if (numRows == 0 )
             return resultList;
-      if (numRows == 1)
+        List<Integer> firstList = new ArrayList<>();
+        firstList.add(1);
+        resultList.add(firstList);
+      for (int i = 1;i < numRows;i++)
       {
           List<Integer> tempList = new ArrayList<>();
           tempList.add(1);
-          resultList.add(tempList);
-          return resultList;
-      }
-      if (numRows == 2)
-      {
-          List<Integer> tempList = new ArrayList<>();
-          tempList.add(1);
-          tempList.add(1);
-          resultList = generate(1);
-          resultList.add(tempList);
-          return resultList;
-      }
-      resultList = generate(2);
-      for (int i = 3;i <= numRows;i++)
-      {
-          List<Integer> tempList = new ArrayList<>();
-          tempList.add(1);
-          List<Integer> preList = generate(i - 1).get( i - 2);
+          List<Integer> preList = resultList.get(i - 1);
           for (int j = 0 ; j + 1 < preList.size();j ++)
           {
               tempList.add(preList.get(j) + preList.get(j + 1));
