@@ -6,8 +6,319 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class first {
     public static void main(String[] args) {
-        int[] nums = {7,6,4,3,1};
-        System.out.println(maxProfit(nums));
+
+        System.out.println(isUgly(8));
+    }
+    /**
+     * 题目：编写一个程序判断给定的数是否为丑数。
+
+     丑数就是只包含质因数 2, 3, 5 的正整数。
+     */
+    public static boolean isUgly(int num) {
+      boolean flag = false;
+      while (num != 1)
+      {
+          if (num % 2 == 0)
+          {
+              flag = true;
+              num = num / 2;
+          }
+          if (num % 3 == 0)
+          {
+              flag = true;
+              num = num / 3;
+          }
+          if (num % 5 == 0)
+          {
+              flag = true;
+              num = num / 5;
+          }
+          if (!flag)
+              return false;
+          flag = false;
+      }
+      return true;
+    }
+    /**
+     * 题目：统计所有小于非负数整数 n 的质数的数量。
+     */
+    public static int countPrimes(int n) {
+        boolean[] flag = new boolean[n + 1];
+        for (int  i = 0 ; i <= n ; i ++)
+        {
+            flag[i] = true;
+        }
+        int count = 0;
+        for (int i = 2; i < n ;i++)
+        {
+            if (flag[i])
+            {
+                for (int j = i + i;j <n ;j += i)
+                    flag[j] = false;
+                count++;
+            }
+
+        }
+        return count;
+    }
+    /**
+     * 题目：翻转一棵二叉树。
+     */
+    public TreeNode invertTree(TreeNode root) {
+         if (root == null)
+             return root;
+         if (root.left == null && root.right == null)
+             return root;
+         TreeNode leftRoot = root.left,rightRoot = root.right;
+         root.left = invertTree(rightRoot);
+         root.right = invertTree(leftRoot);
+         return root;
+    }
+    /**
+     * 题目：
+     * 给定一个整数数组和一个整数 k，判断数组中是否存在两个不同的索引 i 和 j，
+     * 使得 nums [i] = nums [j]，并且 i 和 j 的差的绝对值最大为 k。
+     */
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+       HashMap<Integer,Integer> hashMap = new HashMap<>();
+       for (int i = 0 ;i < nums.length;i++)
+       {
+           if (hashMap.containsKey(nums[i]))
+           {
+               int sub = i - hashMap.get(nums[i]);
+               if (sub <= k)
+                   return true;
+               hashMap.put(nums[i],i);
+           }
+           else
+               hashMap.put(nums[i],i);
+       }
+       return false;
+    }
+    /**
+     * 题目：给定一个整数数组，判断是否存在重复元素。
+
+     如果任何值在数组中出现至少两次，函数返回 true。如果数组中每个元素都不相同，则返回 false。
+     */
+    public boolean containsDuplicate(int[] nums) {
+        if (nums.length == 0)
+            return false;
+       Set<Integer> set = new HashSet<>();
+       for (int num:nums)
+       {
+           if (set.contains(num))
+            return true;
+           else
+               set.add(num);
+       }
+       return false;
+    }
+    /**
+     * 题目：
+     *
+     编写一个算法来判断一个数是不是“快乐数”。
+
+     一个“快乐数”定义为：对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和，
+     然后重复这个过程直到这个数变为 1，也可能是无限循环但始终变不到 1。如果可以变为 1，
+     那么这个数就是快乐数。
+
+      分析：任意一个数，最后会变成两个数字循环（89和1），如果为1，则为快乐数，否则则不是快乐数
+     */
+    public boolean isHappy(int n) {
+      if(n < 1) return false;
+      if (n == 1) return true;
+      int s = n;
+      while (s != 89 && s != 1)
+      {
+          s = sum(s);
+          if (s == 89)
+              return false;
+          if (s == 1)
+              return true;
+      }
+      return false;
+    }
+    public int sum(int n)
+    {
+        int num = 0;
+        while (n != 0)
+        {
+            num = num + (n % 10) * (n % 10);
+            n = n / 10;
+        }
+        return num;
+    }
+
+    /**
+     * 题目：编写一个函数，输入是一个无符号整数，返回其二进制表达式中数字位数为 ‘1’ 的个数（也被称为汉明重量）。
+     */
+    public static int hammingWeight(int n) {
+       int count = 0;
+       while (n != 0)
+       {
+           count++;
+           n = (n - 1) & n ;
+       }
+       return count;
+    }
+    /**
+     * 题目：给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
+     */
+    public static void rotate(int[] nums, int k) {
+        int length = nums.length;
+         k = k % length;
+         int temp = 0;
+        for (int i = 0 ; i < k;i++)
+        {
+            temp = nums[length - 1];
+            for (int j = length - 2; j >= 0 ; j--)
+            {
+                nums[j + 1] = nums[j];
+            }
+            nums[0] = temp;
+        }
+    }
+    /**
+     * 题目：给定一个整数 n，返回 n! 结果尾数中零的数量
+     */
+    public static int trailingZeroes(int n) {
+        int num = 0;
+        while(n > 0) {
+            num += (n/5);
+            n /= 5;
+        }
+        return num;
+    }
+    /**
+     * 题目：给定一个大小为 n 的数组，找到其中的众数。众数是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
+
+     你可以假设数组是非空的，并且给定的数组总是存在众数。
+     */
+    public int majorityElement(int[] nums) {
+        Arrays.sort(nums);
+        return nums[(nums.length - 1) / 2];
+    }
+    /**
+     * 题目：给定一个Excel表格中的列名称，返回其相应的列序号。
+     *  A -> 1
+     B -> 2
+     C -> 3
+     ...
+     Z -> 26
+     AA -> 27
+     AB -> 28
+     */
+    public static int titleToNumber(String s) {
+       int sum = 0;
+       int length = s.length() - 1;
+       int count = 0;
+       while (length >= 0)
+       {
+           sum += (s.charAt(length) - 'A' + 1 ) * Math.pow(26,count);
+           count++;
+           length--;
+       }
+       return sum;
+    }
+    /**
+     * 题目：给定一个正整数，返回它在 Excel 表中相对应的列名称。
+     例如，
+     1 -> A
+     2 -> B
+     3 -> C
+     ...
+     26 -> Z
+     27 -> AA
+     28 -> AB
+     */
+    public String convertToTitle(int n) {
+       if (n < 1)
+           return null;
+       StringBuilder sb = new StringBuilder();
+       while (n != 0)
+       {
+           char result = (char) (((n - 1) % 26 ) + 'A');
+           sb.append(result);
+           n = (n - 1) / 26;
+       }
+       return sb.reverse().toString();
+    }
+    /**
+     * 题目：编写一个程序，找到两个单链表相交的起始节点。
+     */
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+       if (headA == null || headB == null)
+           return null;
+       ListNode lA = headA;
+       int lengthA = 0;
+       while (lA != null)
+       {
+           lengthA++;
+           lA = lA.next;
+       }
+       ListNode lB = headB;
+       int lengthB = 0;
+       while (lB != null)
+       {
+           lengthB++;
+           lB = lB.next;
+       }
+       int diff = 0;
+       if (lengthA > lengthB)
+       {
+           lA = headA;
+           lB = headB;
+           diff = lengthA - lengthB;
+       }
+       else
+       {
+           lA = headB;
+           lB = headA;
+           diff = lengthB - lengthA;
+       }
+       for (int i = 0 ; i < diff;i++)
+       {
+           lA = lA.next;
+       }
+       while (lA != null && lB != null)
+       {
+           if (lA == lB)
+               return lA;
+           lA = lA.next;
+           lB = lB.next;
+       }
+       return null;
+
+    }
+    /**
+     * 题目：给定一个链表，判断链表中是否有环。
+     */
+    public static boolean hasCycle(ListNode head) {
+       if (head == null || head.next == null)
+           return false;
+       ListNode low = head,fast = head;
+       while (low.next != null && fast.next!= null)
+       {
+          low = low.next;
+          fast = fast.next.next;
+          if (fast == null)
+              return false;
+          if (low == fast)
+              return true;
+       }
+       return false;
+
+    }
+    /**
+     * 题目：
+     给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+     */
+    public static int singleNumber(int[] nums) {
+        int num = 0;
+        for(int i = 0; i < nums.length; i++) {
+            num ^= nums[i];
+        }
+        return num;
     }
     /**
      * 题目：
