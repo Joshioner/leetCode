@@ -6,8 +6,52 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class first {
     public static void main(String[] args) {
+        int[] m1 = new int[]{0,1,5,3,12};
+        moveZeroes(m1);
+        System.out.println(Arrays.toString(m1));
 
-        System.out.println(isUgly(8));
+    }
+    /**
+     * 题目：移动零
+     */
+    public static void moveZeroes(int[] nums) {
+        int count = 0;
+        for (int i = 0 ; i < nums.length;i++){
+            if (nums[i] != 0 ){
+              nums[count] = nums[i];
+              if (count != i){
+                  nums[i] = 0;
+              }
+              count++;
+            }
+        }
+    }
+//    public static void moveZeroes(int[] nums) {
+//      for (int i = 0 ; i < nums.length;i++){
+//          if (nums[i] == 0){
+//              for (int j = i + 1 ; j < nums.length;j++){
+//                  if (nums[j] != 0){
+//                      int temp = nums[i];
+//                      nums[i] = nums[j];
+//                      nums[j] = temp;
+//                      break;
+//                  }
+//              }
+//          }
+//      }
+//    }
+    /**
+     * 题目：缺失数字
+     */
+    public int missingNumber(int[] nums) {
+        if (nums.length == 1)
+            return nums[0] == 0 ? 1 : 0;
+       Arrays.sort(nums);
+       for (int index = 0; index < nums.length;index++){
+           if (nums[index] != index)
+               return index;
+       }
+       return nums.length;
     }
     /**
      * 题目：编写一个程序判断给定的数是否为丑数。
@@ -15,30 +59,132 @@ public class first {
      丑数就是只包含质因数 2, 3, 5 的正整数。
      */
     public static boolean isUgly(int num) {
-      boolean flag = false;
-      while (num != 1)
-      {
-          if (num % 2 == 0)
-          {
-              flag = true;
-              num = num / 2;
-          }
-          if (num % 3 == 0)
-          {
-              flag = true;
-              num = num / 3;
-          }
-          if (num % 5 == 0)
-          {
-              flag = true;
-              num = num / 5;
-          }
-          if (!flag)
-              return false;
-          flag = false;
-      }
-      return true;
+        if(num==0) return false;
+        if(num==1) return true;
+        if(num%2==0){
+            num=num/2;
+            return isUgly(num);
+        }
+        if(num%3==0){
+            num=num/3;
+            return isUgly(num);
+        }
+        if(num%5==0){
+            num=num/5;
+            return isUgly(num);
+        }
+        return false;
     }
+    /**
+     * 题目：各位相加(通过枚举发现有规律,即若数为9的倍数,则结果为9,若不是则各位相加的结果为对九取余.)
+     */
+    public int addDigits(int num) {
+        if (num  == 0)
+            return num;
+       int result = num % 9;
+       if (result == 0) return 9;
+       return result;
+    }
+//    public int addDigits(int num) {
+//        if (num < 10)
+//            return num;
+//        int sum = 0;
+//        while ( num != 0){
+//            sum += num % 10;
+//            num = num / 10;
+//        }
+//        return addDigits(sum);
+//    }
+    /**
+     * 题目： 同构字符串
+     */
+    public boolean isIsomorphic(String s, String t) {
+        if (s.length() != t.length())
+            return false;
+        int[] m1 = new int[256];
+        int[] m2 = new int[256];
+        for (int i = 0 ; i < s.length();i++){
+            if (m1[s.charAt(i)] != m2[t.charAt(i)]){
+                return false;
+            }
+            m1[s.charAt(i)] = i + 1;
+            m2[t.charAt(i)] = i + 1 ;
+        }
+        return true;
+    }
+    /**
+     * 题目：
+     *  二叉树的所有路径
+     */
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> result = new ArrayList<String>();
+
+        // check corner case
+        /* your code */
+        if(root == null){
+            return result;
+        }
+        // recursion
+        String path = Integer.toString(root.val);
+        helper(root, path , result);
+        return result;
+    }
+    private void helper(TreeNode root, String path, List<String> result) {
+        /* your code */
+        //判断空
+        if(root == null){
+            return;
+        }
+        //到叶子节点加入result
+        if(root.left == null && root.right == null){
+            result.add(path);
+            return;
+        }
+        //递归
+        if(root.left != null)
+        {
+            helper(root.left ,path + "->" + root.left.val,result);
+        }
+        if(root.right != null)
+        {
+            helper(root.right ,path + "->" + root.right.val,result);
+        }
+
+    }
+    /**
+     * 题目：
+     * 有效的字母异位词
+     */
+    public boolean isAnagram(String s, String t) {
+        int[] array = new int[26];
+        for (int i = 0 ; i < s.length();i++)
+        {
+            array[s.charAt(i) - 'a']++;
+        }
+        for (int i = 0 ; i < t.length();i++)
+        {
+            array[t.charAt(i) - 'a']--;
+        }
+        for (int num:array)
+        {
+            if (num != 0)
+                return false;
+        }
+        return true;
+    }
+    /**
+     * 题目：二叉搜索树的最近公共祖先
+     */
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || p == null || q == null)
+            return null;
+        if (p.val < root.val && q.val < root.val)
+           return lowestCommonAncestor(root.left,p,q);
+        else if (p.val> root.val && q.val > root.val)
+            return lowestCommonAncestor(root.right,p,q);
+        return root;
+    }
+
     /**
      * 题目：统计所有小于非负数整数 n 的质数的数量。
      */
